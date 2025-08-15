@@ -1,6 +1,6 @@
 const nodemailer = require('nodemailer');
 
-async function sendYandexMail() {
+async function itsEnd() {
     const transporter = nodemailer.createTransport({
         host: 'smtp.yandex.ru',
         port: 465,
@@ -33,4 +33,4 @@ async function sendYandexMail() {
     }
 }
 
-sendYandexMail().catch(console.error);
+module.exports = itsEnd;
