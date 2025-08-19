@@ -64,7 +64,7 @@ async function sendMail(to, subject, text, html) {
 cron.schedule(
     getCronExpression('09:00'),
     async () => {
-        await sendMail('samortsev@gmail.com', startSubject, startText, startHtml),
+        await sendMail('samortsev@gmail.com', startSubject, startText, startHtml);
     },
     {
         timezone,
@@ -73,7 +73,7 @@ cron.schedule(
 cron.schedule(
     getCronExpression('18:00'),
     async () => {
-        await sendMail('samortsev@gmail.com', endSubject, endText, endHtml)
+        await sendMail('samortsev@gmail.com', endSubject, endText, endHtml);
     },
     {
         timezone,
