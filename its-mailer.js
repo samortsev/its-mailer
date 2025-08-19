@@ -1,6 +1,6 @@
 const cron = require('node-cron');
-const timezone = 'Europe/Moscow';
 const nodemailer = require('nodemailer');
+const timezone = 'Europe/Moscow';
 const startSubject = 'Начало смены';
 const startText = `К работе приступил
 
@@ -32,7 +32,7 @@ function randomDelay() {
     });
 }
 
-async function sendMail(subject, text, html) {
+async function sendMail(to, subject, text, html) {
     await randomDelay();
 
     const transporter = nodemailer.createTransport({
@@ -47,7 +47,7 @@ async function sendMail(subject, text, html) {
 
     const mailOptions = {
         from: '"Дмитрий Саморцев" <samortsevdb@itsai.ru>',
-        to: 'samortsev@gmail.com',
+        to,
         subject,
         text,
         html,
@@ -61,11 +61,23 @@ async function sendMail(subject, text, html) {
     }
 }
 
-cron.schedule(getCronExpression('09:00'), () => sendMail(startSubject, startText, startHtml), {
-    timezone,
-});
-cron.schedule(getCronExpression('18:00'), () => sendMail(endSubject, endText, endHtml), {
-    timezone,
-});
+cron.schedule(
+    getCronExpression('09:00'),
+    () => {
+        await sendMail('samortsev@gmail.com', startSubject, startText, startHtml),
+    },
+    {
+        timezone,
+    }
+);
+cron.schedule(
+    getCronExpression('18:00'),
+    () => {
+        sendMail('samortsev@gmail.com', endSubject, endText, endHtml)
+    },
+    {
+        timezone,
+    }
+);
 
 console.log('Задачи запланированы (Московское время)');
