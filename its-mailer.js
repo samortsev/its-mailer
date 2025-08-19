@@ -1,42 +1,71 @@
 const cron = require('node-cron');
-const moment = require('moment-timezone');
-const itsStart = require('./its-start');
-const itsEnd = require('./its-end');
+const timezone = 'Europe/Moscow';
+const nodemailer = require('nodemailer');
+const startSubject = 'Начало смены';
+const startText = `К работе приступил
 
-// Функция для генерации случайного отклонения в минутах (от -2 до +2 минут)
-function getRandomOffset() {
-    return Math.floor(Math.random() * 5) - 2; // -2, -1, 0, 1, 2
-}
+--
+С уважением, Дмитрий Саморцев`;
+const startHtml = `К работе приступил<br>
+<br>
+--<br>
+С уважением, Дмитрий Саморцев`;
+const endSubject = 'Конец смены';
+const endText = `Работать закончил
 
-// Функция для запуска задачи с учетом случайного отклонения
-function scheduleWithRandomOffset(cronTime, task) {
-    const offset = getRandomOffset();
-    const scheduledTime = moment().tz('Europe/Moscow').startOf('day').add(cronTime);
-    scheduledTime.add(offset, 'minutes');
+--
+С уважением, Дмитрий Саморцев`;
+const endHtml = `Работать закончил<br>
+<br>
+--<br>
+С уважением, Дмитрий Саморцев`;
 
-    // Если время уже прошло сегодня, планируем на следующий день
-    if (scheduledTime.isBefore(moment().tz('Europe/Moscow'))) {
-        scheduledTime.add(1, 'day');
-    }
-
-    const timeout = scheduledTime.diff(moment().tz('Europe/Moscow'));
-    setTimeout(() => {
-        task();
-        // Планируем регулярное выполнение после первого запуска
-        cron.schedule(getCronExpression(cronTime), task);
-    }, timeout);
-}
-
-// Преобразование времени в cron-выражение (только рабочие дни)
 function getCronExpression(time) {
     const [hours, minutes] = time.split(':').map(Number);
-    return `${minutes} ${hours} * * 1-5`; // Пн-Пт
+    return `${minutes} ${hours} * * 2-5`;
 }
 
-// Планирование itsStart на 9:00 с отклонением
-scheduleWithRandomOffset('09:00', itsStart);
+function randomDelay() {
+    return new Promise(resolve => {
+        const delay = Math.floor(Math.random() * 3 * 60 * 1000);
+        setTimeout(resolve, delay);
+    });
+}
 
-// Планирование itsEnd на 18:00 с отклонением
-scheduleWithRandomOffset('18:00', itsEnd);
+async function sendMail(subject, text, html) {
+    await randomDelay();
+
+    const transporter = nodemailer.createTransport({
+        host: 'smtp.yandex.ru',
+        port: 465,
+        secure: true,
+        auth: {
+            user: 'samortsevdb@itsai.ru',
+            pass: 'Ipad1234',
+        },
+    });
+
+    const mailOptions = {
+        from: '"Дмитрий Саморцев" <samortsevdb@itsai.ru>',
+        to: 'samortsev@gmail.com',
+        subject,
+        text,
+        html,
+    };
+
+    try {
+        const info = await transporter.sendMail(mailOptions);
+        console.log('Письмо отправлено: %s - %s', info.messageId, new Date().toISOString());
+    } catch (error) {
+        console.error('Ошибка при отправке письма:', error, new Date().toISOString());
+    }
+}
+
+cron.schedule(getCronExpression('09:00'), () => sendMail(startSubject, startText, startHtml), {
+    timezone,
+});
+cron.schedule(getCronExpression('18:00'), () => sendMail(endSubject, endText, endHtml), {
+    timezone,
+});
 
 console.log('Задачи запланированы (Московское время)');
