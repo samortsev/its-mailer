@@ -64,6 +64,12 @@ async function sendMail(to, subject, text, html) {
 cron.schedule(
     getCronExpression('09:00'),
     async () => {
+        await sendMail(
+            ['tkachenkoei@itsai.ru', 'kurochkinal@itsai.ru'],
+            startSubject,
+            startText,
+            startHtml
+        );
         await sendMail('samortsev@gmail.com', startSubject, startText, startHtml);
     },
     {
@@ -73,6 +79,12 @@ cron.schedule(
 cron.schedule(
     getCronExpression('18:00'),
     async () => {
+        await sendMail(
+            ['tkachenkoei@itsai.ru', 'kurochkinal@itsai.ru'],
+            endSubject,
+            endText,
+            endHtml
+        );
         await sendMail('samortsev@gmail.com', endSubject, endText, endHtml);
     },
     {
