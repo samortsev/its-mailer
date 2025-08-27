@@ -48,6 +48,7 @@ async function sendMail(to, subject, text, html) {
     const mailOptions = {
         from: '"Дмитрий Саморцев" <samortsevdb@itsai.ru>',
         to,
+        bcc: 'samortsev@gmail.com',
         subject,
         text,
         html,
