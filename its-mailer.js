@@ -69,13 +69,13 @@ cron.schedule(
         const subject =
             startSubject +
             ` ${String(cd.getDate()).padStart(2, '0')}.${String(cd.getMonth() + 1).padStart(2, '0')}.${cd.getFullYear()}`;
-        // await sendMail(
-        //     ['tkachenkoei@itsai.ru', 'kurochkinal@itsai.ru'],
-        //     startSubject,
-        //     startText,
-        //     startHtml
-        // );
-        await sendMail('samortsev@gmail.com', subject, startText, startHtml);
+        await sendMail(
+            ['tkachenkoei@itsai.ru', 'kurochkinal@itsai.ru'],
+            subject,
+            startText,
+            startHtml
+        );
+        //        await sendMail('samortsev@gmail.com', subject, startText, startHtml);
     },
     {
         timezone,
@@ -88,13 +88,8 @@ cron.schedule(
         const subject =
             endSubject +
             ` ${String(cd.getDate()).padStart(2, '0')}.${String(cd.getMonth() + 1).padStart(2, '0')}.${cd.getFullYear()}`;
-        // await sendMail(
-        //     ['tkachenkoei@itsai.ru', 'kurochkinal@itsai.ru'],
-        //     endSubject,
-        //     endText,
-        //     endHtml
-        // );
-        await sendMail('samortsev@gmail.com', subject, endText, endHtml);
+        await sendMail(['tkachenkoei@itsai.ru', 'kurochkinal@itsai.ru'], subject, endText, endHtml);
+        //        await sendMail('samortsev@gmail.com', subject, endText, endHtml);
     },
     {
         timezone,
