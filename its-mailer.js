@@ -41,7 +41,7 @@ async function sendMail(to, subject, text, html) {
         secure: true,
         auth: {
             user: 'samortsevdb@itsai.ru',
-            pass: 'Ipad1234',
+            pass: 'Ipad1976!!z',
         },
     });
 
