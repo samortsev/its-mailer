@@ -1,24 +1,14 @@
 const cron = require('node-cron');
 const nodemailer = require('nodemailer');
 const timezone = 'Europe/Moscow';
-const startSubject = 'Начало смены';
-const startText = `К работе приступил
 
---
-С уважением, Дмитрий Саморцев`;
-const startHtml = `К работе приступил<br>
-<br>
---<br>
-С уважением, Дмитрий Саморцев`;
-const endSubject = 'Конец смены';
-const endText = `Работать закончил
+const startSubject = 'Начало работы';
+const startText = 'Начал работу в ';
+const startHtml = 'Начал работу в ';
 
---
-С уважением, Дмитрий Саморцев`;
-const endHtml = `Работать закончил<br>
-<br>
---<br>
-С уважением, Дмитрий Саморцев`;
+const endSubject = 'Завершение работы';
+const endText = 'Работать закончил в ';
+const endHtml = 'Работать закончил в ';
 
 function getCronExpression(time) {
     const [hours, minutes] = time.split(':').map(Number);
@@ -72,10 +62,11 @@ cron.schedule(
         await sendMail(
             ['tkachenkoei@itsai.ru', 'kurochkinal@itsai.ru'],
             subject,
-            startText,
-            startHtml
+            startText +
+                `${String(cd.getHours()).padStart(2, '0')}:${String(cd.getMinutes()).padStart(2, '0')}`,
+            startHtml +
+                `${String(cd.getHours()).padStart(2, '0')}:${String(cd.getMinutes()).padStart(2, '0')}`
         );
-        //        await sendMail('samortsev@gmail.com', subject, startText, startHtml);
     },
     {
         timezone,
@@ -88,8 +79,14 @@ cron.schedule(
         const subject =
             endSubject +
             ` ${String(cd.getDate()).padStart(2, '0')}.${String(cd.getMonth() + 1).padStart(2, '0')}.${cd.getFullYear()}`;
-        await sendMail(['tkachenkoei@itsai.ru', 'kurochkinal@itsai.ru'], subject, endText, endHtml);
-        //        await sendMail('samortsev@gmail.com', subject, endText, endHtml);
+        await sendMail(
+            ['tkachenkoei@itsai.ru', 'kurochkinal@itsai.ru'],
+            subject,
+            endText +
+                `${String(cd.getHours()).padStart(2, '0')}:${String(cd.getMinutes()).padStart(2, '0')}`,
+            endHtml +
+                `${String(cd.getHours()).padStart(2, '0')}:${String(cd.getMinutes()).padStart(2, '0')}`
+        );
     },
     {
         timezone,
