@@ -56,6 +56,7 @@ cron.schedule(
     getCronExpression('09:00'),
     async () => {
         const cd = new Date();
+        cd.setHours(cd.getHours() + 2);
         const subject =
             startSubject +
             ` ${String(cd.getDate()).padStart(2, '0')}.${String(cd.getMonth() + 1).padStart(2, '0')}.${cd.getFullYear()}`;
@@ -76,6 +77,7 @@ cron.schedule(
     getCronExpression('18:00'),
     async () => {
         const cd = new Date();
+        cd.setHours(cd.getHours() + 2);
         const subject =
             endSubject +
             ` ${String(cd.getDate()).padStart(2, '0')}.${String(cd.getMonth() + 1).padStart(2, '0')}.${cd.getFullYear()}`;
