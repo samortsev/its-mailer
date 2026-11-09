@@ -12,7 +12,7 @@ const endHtml = 'Работать закончил в ';
 
 function getCronExpression(time) {
     const [hours, minutes] = time.split(':').map(Number);
-    return `${minutes} ${hours} * * 2-5`;
+    return `${minutes} ${hours} * * 1-5`;
 }
 
 function randomDelay() {
